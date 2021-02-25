@@ -15,11 +15,12 @@ void printarray();
 word* store(word* w, int num, char* token, int lineNum);
 int readfile(FILE *f,word* stopw,int n, int num);
 void sortarray();
-
+// Loi o ham sortarray khi thuc hien chuong trinh voi file alice30.txt
+// S
 int main(){
     FILE *f1, *f2;
     NumOfTokens =0;
-    if ((f1 = fopen("alice30.txt","r")) == NULL)
+    if ((f1 = fopen("vanban.txt","r")) == NULL)
     {
         printf("Can't open file vanban.txt\n");
         exit(0);
@@ -46,7 +47,7 @@ int main(){
         n++;
     }
     NumOfTokens= readfile(f1,stopw,n, NumOfTokens);
-    //sortarray();
+    sortarray();
     printarray();
     fclose(f1);
     fclose(f2);
@@ -74,7 +75,7 @@ void printarray()
         printf("\n");
     }
 }
-/*
+
 void sortarray(){
     int i,j;
     word temp;
@@ -86,7 +87,7 @@ void sortarray(){
              memcpy(&w[j+1], &temp, sizeof(word));
          }
       }
-}*/
+}
 int check(int num, char* token)
 {
     for (int i=0;i<num; i++)
