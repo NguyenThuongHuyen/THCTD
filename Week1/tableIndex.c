@@ -16,7 +16,8 @@ word* store(word* w, int num, char* token, int lineNum);
 int readfile(FILE *f,word* stopw,int n, int num);
 void sortarray();
 // Loi o ham sortarray khi thuc hien chuong trinh voi file alice30.txt
-// S
+// Sort den tu cuoi cung nhung khong dua tu vao mang dan den N
+// Chua loai bo duoc danh tu rieng
 int main(){
     FILE *f1, *f2;
     NumOfTokens =0;
