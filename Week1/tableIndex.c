@@ -12,16 +12,15 @@ int NumOfTokens;
 
 void strlower(char* token);
 void printarray();
+int check_stopw(word* stopw,int n, char* token);
 word* store(word* w, int num, char* token, int lineNum);
 int readfile(FILE *f,word* stopw,int n, int num);
 void sortarray();
-// Loi o ham sortarray khi thuc hien chuong trinh voi file alice30.txt
-// Sort den tu cuoi cung nhung khong dua tu vao mang dan den N
-// Chua loai bo duoc danh tu rieng
+
 int main(){
     FILE *f1, *f2;
     NumOfTokens =0;
-    if ((f1 = fopen("vanban.txt","r")) == NULL)
+    if ((f1 = fopen("alice30.txt","r")) == NULL)
     {
         printf("Can't open file vanban.txt\n");
         exit(0);
@@ -52,6 +51,7 @@ int main(){
     printarray();
     fclose(f1);
     fclose(f2);
+    free(w);
     return 0;
 }
 void strlower(char* token)
@@ -65,7 +65,7 @@ void strlower(char* token)
 void printarray()
 {
     int j;
-    for (int i=0; i<NumOfTokens; i++)
+    for (int i=0; i<NumOfTokens-1; i++)
     {
         j=w[i].count;
         printf("%s %d", w[i].word, w[i].count);
@@ -141,25 +141,18 @@ int readfile(FILE *f,word* stopw,int n, int num){
             strlower(token);
 			if (i!=0){
                 if (!check_stopw(stopw,n, token))
-                {
-                    if (!check(num, token)) 
-                    {
+                {if (!check(num, token)) {
                         w = store(w, num, token, lineNum);
-                        num++;
-                    }
-                    else
-                    {
-                        for(int i=0;i<num;i++)
-                        {
-                            if (strcmp(w[i].word, token) ==0)
-                            {
+                        num++;}
+                    else{
+                        for(int i=0;i<num;i++){
+                            if (strcmp(w[i].word, token) ==0){
                                 j=w[i].count;
                                 w[i].line[j]=lineNum;
                                 w[i].count++;
                             }
                         }
-                    }
-                    
+                    }   
                 }
             }
 			i=0;
