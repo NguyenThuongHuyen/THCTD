@@ -59,7 +59,7 @@ void strlower(char* token)
     for (int i=0; i<strlen(token); i++)
     {
         if (token[i]>='A' && token[i]<='Z')
-        token[i]+=32;
+        token[i]= tolower(token[i]);
     }
 }
 void printarray()
