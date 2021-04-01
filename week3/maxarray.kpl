@@ -1,0 +1,60 @@
+PROGRAM INPUTFMIN; 
+TYPE T = INTEGER;
+VAR A : ARRAY(. 10 .) OF T;
+
+PROCEDURE INPUT;
+VAR I: INTEGER;
+BEGIN
+    FOR I := 0 TO 9 DO
+        BEGIN
+            A(.I.) := READI;
+        END
+END;
+
+PROCEDURE PRINT;
+VAR I : INTEGER;
+BEGIN
+  FOR I := 0 TO 9 DO
+    BEGIN
+        CALL WRITEI( A(.I.) );
+    END
+END;
+
+FUNCTION MAX : INTEGER;
+VAR I : INTEGER;
+    M : INTEGER;
+BEGIN
+  M := A(.0.);
+  FOR I := 1 TO 9 DO
+    BEGIN
+        IF M <= A(.I.) THEN
+            M := A(.I.)
+    END;
+  MAX := M;
+END;
+
+FUNCTION DIFF : INTEGER;
+VAR I : INTEGER;
+    K : INTEGER;
+    CHECK : INTEGER;
+BEGIN
+    CHECK := 0;
+    FOR I := 0 TO 9 DO
+        BEGIN
+            FOR K := I + 1 TO 9 DO
+                BEGIN
+                    IF A(.I.) = A(.K.) THEN
+                        CHECK := CHECK + 1;
+                END;
+        END;
+    DIFF := CHECK;
+END;
+
+BEGIN
+    CALL INPUT;
+    CALL WRITELN;
+    CALL WRITEI(MAX);
+    CALL WRITELN;
+    CALL WRITELN;
+    CALL WRITEI(DIFF);
+END.
