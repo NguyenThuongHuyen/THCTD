@@ -137,7 +137,7 @@ void checkStringType(Type* type) {
 }
 
 void checkBasicType(Type* type) {
-  if(type == NULL || (type->typeClass != TP_INT && type->typeClass != TP_CHAR))
+  if(type == NULL || (type->typeClass != TP_INT && type->typeClass != TP_CHAR && type->typeClass != TP_DOUBLE && type->typeClass != TP_STRING))
     error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
 }
 
@@ -145,30 +145,18 @@ void checkArrayType(Type* type) {
   if(type == NULL || type->typeClass != TP_ARRAY)
     error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
 }
+void checkTypeEquality(Type* type1, Type* type2) {
+  if (compareType(type1, type2) == 0) error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+ }
 
-Type* autoUpcasting(Type* type1, Type* type2) {
+
+Type* upcast(Type* type1, Type* type2) {
   checkNumberType(type1);
   checkNumberType(type2);
-  
   if (type1->typeClass == TP_DOUBLE) {
     return type1;
   } else {
     return type2;
   }
 }
-
-void checkTypeEquality(Type* type1, Type* type2) {
-  if(type1 == NULL || type2 == NULL) {
-    error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
-  }
-    
-  if (type1->typeClass == type2->typeClass) {
-    if (type1->typeClass == TP_ARRAY) {
-      if (type1->arraySize == type2->arraySize)
-        return checkTypeEquality(type1->elementType, type2->elementType);
-      else error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
-    }
-  } else error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
-}
-
 
