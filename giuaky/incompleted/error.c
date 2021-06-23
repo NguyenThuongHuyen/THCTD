@@ -51,8 +51,9 @@ struct ErrorMessage errors[NUM_OF_ERRORS] = {
 
     {ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, "The number of arguments and the number of parameters are inconsistent."},
     
-    {ERR_ASSIGN_LEFT_LESS, "Left side of assign is less than right side"},
-    {ERR_ASSIGN_LEFT_MORE, "Left side of assign is more than right side"}};
+    {ERR_ASSIGN_LEFT_LESS_VARIABLE, "Left side of assign has less variable than right side"},
+    {ERR_ASSIGN_LEFT_MORE_VARIABLE, "Left side of assign has more variable than right side"}
+};
 
 void error(ErrorCode err, int lineNo, int colNo)
 {
