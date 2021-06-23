@@ -475,13 +475,13 @@ Type* compileLValue(void) {
 }
 void compileAssignSt(void)
 {
-  Type *varType[100];
-  Type *expressType[100];
-  int i = 0;
-  int j = 0;
+  Type *varType[20];
+  Type *expressType[20];
+  int left = 0;
+  int right = 0;
   while (1)
   {
-    varType[i++] = compileLValue();
+    varType[left++] = compileLValue();
     if (lookAhead->tokenType == SB_ASSIGN)
       break;
     if (lookAhead->tokenType == SB_COMMA)
@@ -491,24 +491,24 @@ void compileAssignSt(void)
   eat(SB_ASSIGN);
   while (1)
   {
-    expressType[j++] = compileExpression();
+    expressType[left++] = compileExpression();
     if (lookAhead->tokenType == SB_COMMA)
       eat(SB_COMMA);
     else
       break;
   }
 
-  if (i > j)
+  if (left > right)
   {
     error(ERR_ASSIGN_LEFT_MORE_VARIABLE, currentToken->lineNo, currentToken->colNo);
   }
-  else if(i < j )
+  else if(left < right )
   {
     error(ERR_ASSIGN_LEFT_LESS_VARIABLE, currentToken->lineNo, currentToken->colNo);
   }
   else
   {
-    for (int k = 0; k < i; k++)
+    for (int k = 0; k < left; k++)
     {
       checkTypeEquality(varType[k], expressType[k]);
     }
