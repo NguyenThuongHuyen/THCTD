@@ -479,24 +479,21 @@ void compileAssignSt(void)
   Type *expressType[20];
   int left = 0;
   int right = 0;
-  while (1)
-  {
+   do{
     varType[left++] = compileLValue();
-    if (lookAhead->tokenType == SB_ASSIGN)
-      break;
     if (lookAhead->tokenType == SB_COMMA)
       eat(SB_COMMA);
-  }
+  }while(lookAhead->tokenType != SB_ASSIGN);
 
   eat(SB_ASSIGN);
-  while (1)
-  {
-    expressType[left++] = compileExpression();
+
+  do{
+    expressType[right++] = compileExpression();
     if (lookAhead->tokenType == SB_COMMA)
       eat(SB_COMMA);
-    else
+    else 
       break;
-  }
+  }while(1);
 
   if (left > right)
   {
