@@ -473,72 +473,47 @@ Type* compileLValue(void) {
 
   return varType;
 }
-
-int compileLeftAssign(Type** LAssign, int top) {
-  LAssign[top] = compileLValue();
-
-  switch (lookAhead->tokenType)
+void compileAssignSt(void)
+{
+  Type *varType[100];
+  Type *expressType[100];
+  int i = 0;
+  int j = 0;
+  while (1)
   {
-  case SB_COMMA:
-    eat(SB_COMMA);
-    return compileLeftAssign(LAssign, top + 1);
-    break;
-  case SB_ASSIGN:
-    return top + 1;
-    break;
-  default:
-    error(ERR_INVALID_STATEMENT, currentToken->lineNo, currentToken->colNo);
-    break;
-  }
-  return -1;
-}
-
-int compileRightAssign(Type** RAssign, int top) {
-  RAssign[top] = compileExpression();
-
-  switch (lookAhead->tokenType)
-  {
-  case SB_COMMA:
-    eat(SB_COMMA);
-    return compileRightAssign(RAssign, top + 1);
-    break;
-  default:
-    return top + 1;
-  }
-}
-
-void compileAssignSt(void) {
-  //  parse the assignment and check type consistency
-  Type** LAssign = (Type**) calloc(MAX_ASSIGN, sizeof(Type*));
-  Type** RAssign = (Type**) calloc(MAX_ASSIGN, sizeof(Type*));
-  if (LAssign == NULL || RAssign == NULL) {
-    printf("Error when calloc!");
-    exit(1);
+    varType[i++] = compileLValue();
+    if (lookAhead->tokenType == SB_ASSIGN)
+      break;
+    if (lookAhead->tokenType == SB_COMMA)
+      eat(SB_COMMA);
   }
 
-  int Lvar = compileLeftAssign(LAssign, 0);
   eat(SB_ASSIGN);
-  int Rvar = compileRightAssign(RAssign, 0);
-
-  if (Lvar < Rvar) {
-    error(ERR_ASSIGN_LEFT_LESS, currentToken->lineNo, currentToken->colNo);
+  while (1)
+  {
+    expressType[j++] = compileExpression();
+    if (lookAhead->tokenType == SB_COMMA)
+      eat(SB_COMMA);
+    else
+      break;
   }
-  else if (Lvar > Rvar) {
-    error(ERR_ASSIGN_LEFT_MORE, currentToken->lineNo, currentToken->colNo);
-  }
 
-  for (int i = 0; i < Lvar; i++) {
-    if (LAssign[i]->typeClass == TP_DOUBLE) {
-      checkNumberType(RAssign[i]);
-    } else {
-      checkTypeEquality(RAssign[i], LAssign[i]);
+  if (i > j)
+  {
+    error(ERR_ASSIGN_LEFT_MORE_VARIABLE, currentToken->lineNo, currentToken->colNo);
+  }
+  else if(i < j )
+  {
+    error(ERR_ASSIGN_LEFT_LESS_VARIABLE, currentToken->lineNo, currentToken->colNo);
+  }
+  else
+  {
+    for (int k = 0; k < i; k++)
+    {
+      checkTypeEquality(varType[k], expressType[k]);
     }
   }
-
-  if (LAssign != NULL) free(LAssign);
-  if (RAssign != NULL) free(RAssign);
 }
-
 void compileCallSt(void) {
   Object* proc;
 
@@ -577,7 +552,6 @@ void compileWhileSt(void) {
   compileStatement();
 }
 
-//do - while
 void compileDoSt(void) {
   eat(KW_DO);
   compileStatement();
@@ -743,7 +717,7 @@ Type* compileExpression2(void) {
   type2 = compileExpression3();
   if (type2 == NULL) return type1;
   else {
-    return autoUpcasting(type1, type2);
+    return upcast(type1, type2);
   }
 }
 
@@ -760,7 +734,7 @@ Type* compileExpression3(void) {
 
     type2 = compileExpression3();
     if (type2 != NULL) {
-      return autoUpcasting(type1, type2);
+      return upcast(type1, type2);
     }
     
     return type1;
@@ -772,7 +746,7 @@ Type* compileExpression3(void) {
 
     type2 = compileExpression3();
     if (type2 != NULL) {
-      return autoUpcasting(type1, type2);
+      return upcast(type1, type2);
     }
     
     return type1;
@@ -810,7 +784,7 @@ Type* compileTerm(void) {
   type2 = compileTerm2();
 
   if (type2 != NULL) {
-    return autoUpcasting(type1, type2);
+    return upcast(type1, type2);
   }
 
   return type1;
@@ -828,7 +802,7 @@ Type* compileTerm2(void) {
 
     type2 = compileTerm2();
     if (type2 != NULL) {
-      return autoUpcasting(type1, type2);
+      return upcast(type1, type2);
     }
     return type1;
     break;
@@ -839,7 +813,7 @@ Type* compileTerm2(void) {
 
     type2 = compileTerm2();
     if (type2 != NULL) {
-      return autoUpcasting(type1, type2);
+      return upcast(type1, type2);
     }
     return type1;
     break;
